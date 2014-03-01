@@ -1152,6 +1152,7 @@ static const char *strDNSSeed[][2] = {
     {"zeitcoin", "54.213.220.242"},
     {"Hashstrike", "zeit.hashstrike.com"},
     {"Hash.so", "s3.hash.so"},
+    {"CryptoSiD", "173.209.34.66"},
 };
 
 void ThreadDNSAddressSeed(void* parg)
