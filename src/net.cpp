@@ -1151,7 +1151,7 @@ void MapPort()
 static const char *strDNSSeed[][2] = {
     {"zeitcoin", "54.213.220.242"},
     {"Hashstrike", "zeit.hashstrike.com"},
-    {"Hash.co", "s3.hash.so"},
+    {"Hash.so", "s3.hash.so"},
 };
 
 void ThreadDNSAddressSeed(void* parg)
