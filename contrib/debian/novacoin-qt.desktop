@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Zeitcoin
+Comment=Zeitcoin P2P Cryptocurrency
+Comment[fr]=Zeitcoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Zeitcoin, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/Zeitcoin-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/bitcoin80.xpm
+MimeType=x-scheme-handler/Zeitcoin;
+Categories=Office;

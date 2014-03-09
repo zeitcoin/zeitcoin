@@ -1,0 +1,5 @@
+Zeitcoin-qt usr/bin
+share/pixmaps/bitcoin32.xpm usr/share/pixmaps
+share/pixmaps/bitcoin80.xpm usr/share/pixmaps
+debian/Zeitcoin-qt.desktop usr/share/applications
+debian/Zeitcoin-qt.protocol usr/share/kde4/services/

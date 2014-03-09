@@ -1,0 +1,2 @@
+debian/bin/Zeitcoind usr/bin
+src/Zeitcoind usr/lib/Zeitcoin
