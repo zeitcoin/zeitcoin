@@ -139,7 +139,7 @@ OBJS= \
 all: zeitcoind
 
 test check: test_zeitcoin FORCE
-	./test_BottleCaps
+	./test_zeitcoin
 
 # auto-generated dependencies:
 -include obj/*.P

@@ -143,11 +143,11 @@ int main(int argc, char *argv[])
     // Application identification (must be set before OptionsModel is initialized,
     // as it is used to locate QSettings)
     app.setOrganizationName("Zeitcoin");
-    app.setOrganizationDomain("Zeitcoin.su");
+    app.setOrganizationDomain("zeit-coin.com");
     if(GetBoolArg("-testnet")) // Separate UI settings for testnet
-        app.setApplicationName("Zeitcoin-Qt-testnet");
+        app.setApplicationName("zeitcoin-qt-testnet");
     else
-        app.setApplicationName("Zeitcoin-Qt");
+        app.setApplicationName("zeitcoin-qt");
 
     // ... then GUI settings:
     OptionsModel optionsModel;
