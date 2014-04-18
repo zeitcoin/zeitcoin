@@ -117,7 +117,7 @@ public:
     };
 
     UnlockContext requestUnlock();
-	
+    
     bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     void listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const;

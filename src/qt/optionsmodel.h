@@ -30,7 +30,7 @@ public:
         DisplayAddresses,  // bool
         DetachDatabases,   // bool
         Language,          // QString
-		CoinControlFeatures, // bool
+        CoinControlFeatures, // bool
         OptionIDRowCount,
     };
 
@@ -49,7 +49,7 @@ public:
     bool getMinimizeOnClose();
     int getDisplayUnit();
     bool getDisplayAddresses();
-	bool getCoinControlFeatures();
+    bool getCoinControlFeatures();
     QString getLanguage() { return language; }
 
 private:
@@ -57,12 +57,12 @@ private:
     bool bDisplayAddresses;
     bool fMinimizeToTray;
     bool fMinimizeOnClose;
-	bool fCoinControlFeatures;
+    bool fCoinControlFeatures;
     QString language;
 
 signals:
     void displayUnitChanged(int unit);
-	void transactionFeeChanged(qint64);
+    void transactionFeeChanged(qint64);
     void coinControlFeaturesChanged(bool);
 };
 

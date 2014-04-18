@@ -161,7 +161,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     statusBar()->addPermanentWidget(frameBlocks);
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
-	// this->setStyleSheet("background-color: #effbef;");
+    // this->setStyleSheet("background-color: #effbef;");
 
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
@@ -307,7 +307,7 @@ void BitcoinGUI::createMenuBar()
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
 
-	// QString ss("QMenuBar::item { background-color: #effbef; color: black }"); 
+    // QString ss("QMenuBar::item { background-color: #effbef; color: black }"); 
     // appMenuBar->setStyleSheet(ss);
 }
 
@@ -412,7 +412,7 @@ void BitcoinGUI::createTrayIcon()
     // Note: On Mac, the dock icon is used to provide the tray's functionality.
     MacDockIconHandler *dockIconHandler = MacDockIconHandler::instance();
     trayIconMenu = dockIconHandler->dockMenu();
-	dockIconHandler->setMainWindow((QMainWindow*)this);
+    dockIconHandler->setMainWindow((QMainWindow*)this);
 #endif
 
     // Configuration of the tray icon (or dock icon) icon menu
@@ -524,7 +524,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
         progressBar->setVisible(false);
     }
 
-	tooltip = tr("Current difficulty is %1.").arg(clientModel->GetDifficulty()) + QString("<br>") + tooltip;
+    tooltip = tr("Current difficulty is %1.").arg(clientModel->GetDifficulty()) + QString("<br>") + tooltip;
 
     QDateTime lastBlockDate = clientModel->getLastBlockDate();
     int secs = lastBlockDate.secsTo(QDateTime::currentDateTime());
