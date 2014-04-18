@@ -321,6 +321,7 @@ bool static Socks5(string strDest, int port, SOCKET& hSocket)
 bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRet, int nTimeout)
 {
     hSocketRet = INVALID_SOCKET;
+    int nAdjTimeout = 0;
 
 #ifdef USE_IPV6
     struct sockaddr_storage sockaddr;
@@ -359,8 +360,13 @@ bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRe
         if (WSAGetLastError() == WSAEINPROGRESS || WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINVAL)
         {
             struct timeval timeout;
-            timeout.tv_sec  = nTimeout / 1000;
-            timeout.tv_usec = (nTimeout % 1000) * 1000;
+            if (GetBoolArg("-fastconnect", false))
+                nAdjTimeout = nTimeout / 4;
+            else
+                nAdjTimeout = nTimeout;
+
+            timeout.tv_sec  = nAdjTimeout / 1000;
+            timeout.tv_usec = (nAdjTimeout % 1000) * 1000;
 
             fd_set fdset;
             FD_ZERO(&fdset);

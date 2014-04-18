@@ -966,12 +966,12 @@ void ThreadSocketHandler2(void* parg)
                     printf("socket no message in first 60 seconds, %d %d\n", pnode->nLastRecv != 0, pnode->nLastSend != 0);
                     pnode->fDisconnect = true;
                 }
-                else if (GetTime() - pnode->nLastSend > 90*60 && GetTime() - pnode->nLastSendEmpty > 90*60)
+                else if (GetTime() - pnode->nLastSend > 3*60 && GetTime() - pnode->nLastSendEmpty > 3*60)
                 {
                     printf("socket not sending\n");
                     pnode->fDisconnect = true;
                 }
-                else if (GetTime() - pnode->nLastRecv > 90*60)
+                else if (GetTime() - pnode->nLastRecv > 3*60)
                 {
                     printf("socket inactivity timeout\n");
                     pnode->fDisconnect = true;
@@ -1341,7 +1341,7 @@ void ThreadOpenConnections2(void* parg)
                         return;
                 }
             }
-            Sleep(500);
+            Sleep(50);
         }
     }
 
@@ -1430,8 +1430,9 @@ void ThreadOpenConnections2(void* parg)
                 continue;
 
             // do not allow non-default ports, unless after 50 invalid addresses selected already
-            if (addr.GetPort() != GetDefaultPort() && nTries < 50)
-                continue;
+            
+			// if (addr.GetPort() != GetDefaultPort() && nTries < 50)
+            //    continue;
 
             addrConnect = addr;
             break;
