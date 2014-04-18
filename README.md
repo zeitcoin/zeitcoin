@@ -4,7 +4,7 @@ Zeitcoin is an innovative, secure and energy efficient PoW/PoS coin. It uses a f
 
 Zeitcoin also adopt a variable PoS rate, which gives the highest payout at 25% the first year, then decrease 5% per year until the 4th year it reaches annual interest rate of 5%, then it will remain at this rate.
 
-Zeitcoin will have a total of 99 billion coins. Initially each block will deliver 250000 to 1000000 coins randomly. The PoW payout will be halved each week (7 days). After 6 weeks, the PoW payout will be fixed at 1 coin per block until block 190000. At block 190000 POW mining will end.
+Zeitcoin will have a total of 90 billion coins. Initially each block will deliver 250000 to 1000000 coins randomly. The PoW payout will be halved each week (7 days). After 6 weeks, the PoW payout will be fixed at 1 coin per block until block 190000. At block 190000 POW mining will end.
 
 PoS will start after at least 20 days of holding of the coins in the wallet. With PoS, the coin is more resilient to 51% attack.
 
