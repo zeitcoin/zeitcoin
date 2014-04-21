@@ -92,6 +92,7 @@ public:
     typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
     MasterKeyMap mapMasterKeys;
     unsigned int nMasterKeyMaxID;
+    bool fIsMinted;
 
     CWallet()
     {
@@ -101,6 +102,7 @@ public:
         nMasterKeyMaxID = 0;
         pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
+        fIsMinted = false;
     }
     CWallet(std::string strWalletFileIn)
     {
@@ -111,6 +113,7 @@ public:
         nMasterKeyMaxID = 0;
         pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
+        fIsMinted = false;
     }
 
     std::map<uint256, CWalletTx> mapWallet;
@@ -258,6 +261,11 @@ public:
         }
         return nChange;
     }
+
+    // Minting in GUI
+    void SetMinted(bool fMint) { fIsMinted = fMint; }
+    bool GetMinted() { return fIsMinted; }
+
     void SetBestChain(const CBlockLocator& loc);
 
     DBErrors LoadWallet(bool& fFirstRunRet);

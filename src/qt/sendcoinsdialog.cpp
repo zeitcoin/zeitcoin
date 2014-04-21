@@ -116,7 +116,16 @@ void SendCoinsDialog::on_sendButton_clicked()
 
     if(!model)
         return;
-    
+
+    if(model->GetWalletMinted())
+    {
+        QMessageBox::warning(this, tr("Minted"),
+            tr("Wallet is currently unlocked for minting only. Please do a normal unlock for basic functions."),
+            QMessageBox::Ok, QMessageBox::Ok);
+
+        return;
+    }
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
@@ -166,7 +175,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         return;
     }
 
-       WalletModel::SendCoinsReturn sendstatus;
+    WalletModel::SendCoinsReturn sendstatus;
 
     if (!model->getOptionsModel() || !model->getOptionsModel()->getCoinControlFeatures())
         sendstatus = model->sendCoins(recipients);

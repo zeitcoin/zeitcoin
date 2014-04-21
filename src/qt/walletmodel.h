@@ -56,7 +56,8 @@ public:
     {
         Unencrypted,  // !wallet->IsCrypted()
         Locked,       // wallet->IsCrypted() && wallet->IsLocked()
-        Unlocked      // wallet->IsCrypted() && !wallet->IsLocked()
+        Unlocked,     // wallet->IsCrypted() && !wallet->IsLocked()
+        Minted        // ToDo:
     };
 
     OptionsModel *getOptionsModel();
@@ -91,10 +92,13 @@ public:
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);
     // Passphrase only needed when unlocking
-    bool setWalletLocked(bool locked, const SecureString &passPhrase=SecureString());
+    bool setWalletLocked(EncryptionStatus status, const SecureString &passPhrase=SecureString());
     bool changePassphrase(const SecureString &oldPass, const SecureString &newPass);
     // Wallet backup
     bool backupWallet(const QString &filename);
+    // Access mint check
+    bool GetWalletMinted();
+    void SetWalletMinted(bool fMinted);
 
     // RAI object for unlocking wallet, returned by requestUnlock()
     class UnlockContext

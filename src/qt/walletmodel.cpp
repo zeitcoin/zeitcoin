@@ -280,9 +280,9 @@ bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphr
     }
 }
 
-bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
+bool WalletModel::setWalletLocked(EncryptionStatus status, const SecureString &passPhrase)
 {
-    if(locked)
+    if(status == Locked)
     {
         // Lock
         return wallet->Lock();
@@ -292,6 +292,17 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
         // Unlock
         return wallet->Unlock(passPhrase);
     }
+}
+
+// Lazy mans way
+bool WalletModel::GetWalletMinted()
+{
+    return wallet->GetMinted();
+}
+
+void WalletModel::SetWalletMinted(bool fMinted)
+{
+    return wallet->SetMinted(fMinted);
 }
 
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
@@ -377,7 +388,7 @@ WalletModel::UnlockContext::~UnlockContext()
 {
     if(valid && relock)
     {
-        wallet->setWalletLocked(true);
+        wallet->setWalletLocked(Locked);
     }
 }
 
