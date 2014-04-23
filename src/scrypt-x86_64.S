@@ -1461,6 +1461,7 @@ scrypt_core_2way_loop2:
 
 
 	.text
+
 	.align 32
 	.globl scrypt_core_3way
 	.globl _scrypt_core_3way

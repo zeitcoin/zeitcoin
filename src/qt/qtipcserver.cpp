@@ -76,7 +76,7 @@ static void ipcThread(void* pArg)
 {
     // Make this thread recognisable as the GUI-IPC thread
     RenameThread("bitcoin-gui-ipc");
-	
+    
     try
     {
         ipcThread2(pArg);
@@ -98,7 +98,7 @@ static void ipcThread2(void* pArg)
     size_t nSize = 0;
     unsigned int nPriority = 0;
 
-    loop
+    while (true)
     {
         ptime d = boost::posix_time::microsec_clock::universal_time() + millisec(100);
         if (mq->timed_receive(&buffer, sizeof(buffer), nSize, nPriority, d))

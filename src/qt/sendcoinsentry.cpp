@@ -71,6 +71,8 @@ void SendCoinsEntry::setModel(WalletModel *model)
 
     if(model && model->getOptionsModel())
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+        
+        connect(ui->payAmount, SIGNAL(textChanged()), this, SIGNAL(payAmountChanged()));
 
     clear();
 }
@@ -137,13 +139,13 @@ SendCoinsRecipient SendCoinsEntry::getValue()
 
 QWidget *SendCoinsEntry::setupTabChain(QWidget *prev)
 {
-	QWidget::setTabOrder(prev, ui->payTo);
+    QWidget::setTabOrder(prev, ui->payTo);
     QWidget::setTabOrder(ui->payTo, ui->addressBookButton);
     QWidget::setTabOrder(ui->addressBookButton, ui->pasteButton);
     QWidget::setTabOrder(ui->pasteButton, ui->deleteButton);
     QWidget::setTabOrder(ui->deleteButton, ui->addAsLabel);
 
-	return ui->payAmount->setupTabChain(ui->addAsLabel);
+    return ui->payAmount->setupTabChain(ui->addAsLabel);
 }
 
 void SendCoinsEntry::setValue(const SendCoinsRecipient &value)

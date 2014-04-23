@@ -116,9 +116,11 @@ int main(int argc, char *argv[])
     // Do this early as we don't want to bother initializing if we are just calling IPC
     ipcScanRelay(argc, argv);
 
+#if QT_VERSION < 0x050000
     // Internal string conversion is all UTF-8
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForTr());
+#endif
 
     Q_INIT_RESOURCE(bitcoin);
     QApplication app(argc, argv);
@@ -143,11 +145,11 @@ int main(int argc, char *argv[])
     // Application identification (must be set before OptionsModel is initialized,
     // as it is used to locate QSettings)
     app.setOrganizationName("Zeitcoin");
-    app.setOrganizationDomain("Zeitcoin.su");
+    app.setOrganizationDomain("zeit-coin.com");
     if(GetBoolArg("-testnet")) // Separate UI settings for testnet
-        app.setApplicationName("Zeitcoin-Qt-testnet");
+        app.setApplicationName("zeitcoin-qt-testnet");
     else
-        app.setApplicationName("Zeitcoin-Qt");
+        app.setApplicationName("zeitcoin-qt");
 
     // ... then GUI settings:
     OptionsModel optionsModel;

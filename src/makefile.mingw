@@ -3,23 +3,24 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 USE_UPNP:=0
-USE_IPV6:=1
+USE_IPV6:=0
 
 INCLUDEPATHS= \
- -I"C:\boost_1_53_0" \
- -I"C:\db-4.8.30.NC\build_unix" \
- -I"C:\openssl-1.0.1e\include
+ -I"C:/deps/boost_1_53_0" \
+ -I"C:/deps/db-4.8.30.NC/build_unix" \
+ -I"C:/deps/openssl-1.0.1g/include"
  
 LIBPATHS= \
- -L"C:\boost_1_53_0\stage/lib" \
- -L"C:\db-4.8.30.NC\build_unix" \
- -L"C:\openssl-1.0.1e" 
+ -L"C:/deps/boost_1_53_0/stage/lib" \
+ -L"C:/deps/db-4.8.30.NC/build_unix" \
+ -L"C:/deps/openssl-1.0.1g" 
+
 
 LIBS= \
- -l boost_system-mgw45-mt-d-1_53 \
- -l boost_filesystem-mgw45-mt-d-1_53 \
- -l boost_program_options-mgw45-mt-d-1_53 \
- -l boost_thread-mgw45-mt-d-1_53 \
+ -l boost_system-mgw48-mt-s-1_53 \
+ -l boost_filesystem-mgw48-mt-s-1_53 \
+ -l boost_program_options-mgw48-mt-s-1_53 \
+ -l boost_thread-mgw48-mt-s-1_53 \
  -l db_cxx \
  -l ssl \
  -l crypto
@@ -35,8 +36,8 @@ ifndef USE_UPNP
 	override USE_UPNP = -
 endif
 ifneq (${USE_UPNP}, -)
- INCLUDEPATHS += -I"C:\miniupnpc-1.6-mgw"
- LIBPATHS += -L"C:\miniupnpc-1.6-mgw"
+ INCLUDEPATHS += -I"C:/deps/"
+ LIBPATHS += -L"C:/deps/miniupnpc"
  LIBS += -l miniupnpc -l iphlpapi
  DEFS += -DSTATICLIB -DUSE_UPNP=$(USE_UPNP)
 endif

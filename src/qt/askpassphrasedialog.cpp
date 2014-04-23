@@ -41,6 +41,10 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
             ui->passEdit3->hide();
             setWindowTitle(tr("Unlock wallet"));
             break;
+        case ChangePass: // Ask old passphrase + new passphrase x2
+            setWindowTitle(tr("Change passphrase"));
+            ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
+            break;
         case Decrypt:   // Ask passphrase
             ui->warningLabel->setText(tr("This operation needs your wallet passphrase to decrypt the wallet."));
             ui->passLabel2->hide();
@@ -49,9 +53,23 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
             ui->passEdit3->hide();
             setWindowTitle(tr("Decrypt wallet"));
             break;
-        case ChangePass: // Ask old passphrase + new passphrase x2
-            setWindowTitle(tr("Change passphrase"));
-            ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
+        case Mint: // Ask passphrase
+            ui->warningLabel->setText(tr("This operation needs your wallet passphrase to start minting your wallet."));
+            ui->passLabel2->hide();
+            ui->passEdit2->hide();
+            ui->passLabel3->hide();
+            ui->passEdit3->hide();
+            setWindowTitle(tr("Mint wallet"));
+            break;
+        case MintLock:
+            ui->warningLabel->setText(tr("Are you sure you want to lock your wallet and stop minting?"));
+            ui->passLabel1->hide();
+            ui->passEdit1->hide();
+            ui->passLabel2->hide();
+            ui->passEdit2->hide();
+            ui->passLabel3->hide();
+            ui->passEdit3->hide();
+            setWindowTitle(tr("Lock wallet"));
             break;
     }
 
@@ -139,20 +157,9 @@ void AskPassphraseDialog::accept()
         }
         } break;
     case Unlock:
-        if(!model->setWalletLocked(false, oldpass))
+        if(!model->setWalletLocked(WalletModel::Unlocked, oldpass))
         {
             QMessageBox::critical(this, tr("Wallet unlock failed"),
-                                  tr("The passphrase entered for the wallet decryption was incorrect."));
-        }
-        else
-        {
-            QDialog::accept(); // Success
-        }
-        break;
-    case Decrypt:
-        if(!model->setWalletEncrypted(false, oldpass))
-        {
-            QMessageBox::critical(this, tr("Wallet decryption failed"),
                                   tr("The passphrase entered for the wallet decryption was incorrect."));
         }
         else
@@ -181,6 +188,40 @@ void AskPassphraseDialog::accept()
                                  tr("The supplied passphrases do not match."));
         }
         break;
+    case Decrypt:
+        if(!model->setWalletEncrypted(false, oldpass))
+        {
+            QMessageBox::critical(this, tr("Wallet decryption failed"),
+                                  tr("The passphrase entered for the wallet decryption was incorrect."));
+        }
+        else
+        {
+            QDialog::accept(); // Success
+        }
+        break;
+
+    case Mint:
+        if(!model->setWalletLocked(WalletModel::Minted, oldpass))
+        {
+            QMessageBox::critical(this, tr("Wallet minting failed"),
+                                  tr("The passphrase entered for minting was incorrect."));
+        }
+        else
+        {
+            QDialog::accept(); // Success
+        }
+        break;
+    case MintLock:
+        if(!model->setWalletLocked(WalletModel::Locked))
+        {
+            QMessageBox::critical(this, tr("Wallet locking failed"),
+                                  tr("Please try again."));
+        }
+        else
+        {
+            QDialog::accept(); // Success
+        }
+        break;
     }
 }
 
@@ -190,16 +231,20 @@ void AskPassphraseDialog::textChanged()
     bool acceptable = false;
     switch(mode)
     {
-    case Encrypt: // New passphrase x2
-        acceptable = !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
-        break;
-    case Unlock: // Old passphrase x1
-    case Decrypt:
-        acceptable = !ui->passEdit1->text().isEmpty();
-        break;
-    case ChangePass: // Old passphrase x1, new passphrase x2
-        acceptable = !ui->passEdit1->text().isEmpty() && !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
-        break;
+        case Encrypt: // New passphrase x2
+            acceptable = !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
+            break;
+        case Mint:
+        case Unlock: // Old passphrase x1
+        case Decrypt:
+            acceptable = !ui->passEdit1->text().isEmpty();
+            break;
+        case ChangePass: // Old passphrase x1, new passphrase x2
+            acceptable = !ui->passEdit1->text().isEmpty() && !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
+            break;
+        case MintLock:
+            acceptable = true;
+            break;
     }
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(acceptable);
 }

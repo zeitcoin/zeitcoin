@@ -2,7 +2,7 @@
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-USE_UPNP:=0
+USE_UPNP:=-
 USE_IPV6:=1
 
 LINK:=$(CXX)
@@ -180,6 +180,7 @@ test_zeitcoin: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
 clean:
 	-rm -f zeitcoind test_zeitcoin
 	-rm -f obj/*.o
+	-rm -f obj/*.d
 	-rm -f obj-test/*.o
 	-rm -f obj/*.P
 	-rm -f obj-test/*.P

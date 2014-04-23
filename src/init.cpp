@@ -138,10 +138,10 @@ bool AppInit(int argc, char* argv[])
             // First part of help message is specific to bitcoind / RPC client
             std::string strUsage = _("Zeitcoin version") + " " + FormatFullVersion() + "\n\n" +
                 _("Usage:") + "\n" +
-                  "  Zeitcoind [options]                     " + "\n" +
-                  "  Zeitcoind [options] <command> [params]  " + _("Send command to -server or Zeitcoind") + "\n" +
-                  "  Zeitcoind [options] help                " + _("List commands") + "\n" +
-                  "  Zeitcoind [options] help <command>      " + _("Get help for a command") + "\n";
+                  "  zeitcoind [options]                     " + "\n" +
+                  "  zeitcoind [options] <command> [params]  " + _("Send command to -server or Zeitcoind") + "\n" +
+                  "  zeitcoind [options] help                " + _("List commands") + "\n" +
+                  "  zeitcoind [options] help <command>      " + _("Get help for a command") + "\n";
 
             strUsage += "\n" + HelpMessage();
 
@@ -219,8 +219,8 @@ std::string HelpMessage()
 {
     string strUsage = _("Options:") + "\n" +
         "  -?                     " + _("This help message") + "\n" +
-        "  -conf=<file>           " + _("Specify configuration file (default: Zeitcoin.conf)") + "\n" +
-        "  -pid=<file>            " + _("Specify pid file (default: Zeitcoind.pid)") + "\n" +
+        "  -conf=<file>           " + _("Specify configuration file (default: zeitcoin.conf)") + "\n" +
+        "  -pid=<file>            " + _("Specify pid file (default: zeitcoind.pid)") + "\n" +
         "  -gen                   " + _("Generate coins") + "\n" +
         "  -gen=0                 " + _("Don't generate coins") + "\n" +
         "  -datadir=<dir>         " + _("Specify data directory") + "\n" +
@@ -278,7 +278,7 @@ std::string HelpMessage()
         "  -rpcallowip=<ip>       " + _("Allow JSON-RPC connections from specified IP address") + "\n" +
         "  -rpcconnect=<ip>       " + _("Send commands to node running on <ip> (default: 127.0.0.1)") + "\n" +
         "  -blocknotify=<cmd>     " + _("Execute command when the best block changes (%s in cmd is replaced by block hash)") + "\n" +
-		"  -walletnotify=<cmd>    " + _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)") + "\n" +
+        "  -walletnotify=<cmd>    " + _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)") + "\n" +
         "  -upgradewallet         " + _("Upgrade wallet to latest format") + "\n" +
         "  -keypool=<n>           " + _("Set key pool size to <n> (default: 100)") + "\n" +
         "  -rescan                " + _("Rescan the block chain for missing wallet transactions") + "\n" +
