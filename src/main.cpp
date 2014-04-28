@@ -772,6 +772,7 @@ int CMerkleTx::GetBlocksToMaturity() const
     if (!(IsCoinBase() || IsCoinStake()))
         return 0;
     return max(0, (nCoinbaseMaturity+20) - GetDepthInMainChain());
+    // @TODO cleanup-20 >>>     return max(0, (nCoinbaseMaturity) - GetDepthInMainChain());
 }
 
 
@@ -2099,6 +2100,9 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot) const
 
 bool CBlock::AcceptBlock()
 {
+    int64 cutoffPowBlock = CUTOFF_POW_BLOCK;
+    if (fTestNet) cutoffPowBlock = 100;
+
     // Check for duplicate
     uint256 hash = GetHash();
     if (mapBlockIndex.count(hash))
@@ -2111,7 +2115,7 @@ bool CBlock::AcceptBlock()
     CBlockIndex* pindexPrev = (*mi).second;
     int nHeight = pindexPrev->nHeight+1;
 
-    if (IsProofOfWork() && nHeight > CUTOFF_POW_BLOCK)
+    if (IsProofOfWork() && nHeight > cutoffPowBlock)
         return DoS(100, error("AcceptBlock() : No proof-of-work allowed anymore (height = %d)", nHeight));
 
     // Check proof-of-work or proof-of-stake
@@ -2527,11 +2531,11 @@ bool LoadBlockIndex(bool fAllowNew)
 
         bnProofOfStakeLimit = bnProofOfStakeLimitTestNet; // 0x00000fff PoS base target is fixed in testnet
         bnProofOfWorkLimit = bnProofOfWorkLimitTestNet; // 0x0000ffff PoW base target is fixed in testnet
-        nStakeMinAge = 20 * 60; // test net min age is 20 min
-        nStakeMaxAge = 60 * 60; // test net min age is 60 min
-        nModifierInterval = 60; // test modifier interval is 2 minutes
-        nCoinbaseMaturity = 10; // test maturity is 10 blocks
-        nStakeTargetSpacing = 3 * 60; // test block spacing is 3 minutes
+        nStakeMinAge = 2 * 60; // test net min age is 2 min
+        nStakeMaxAge = 6 * 60; // test net max age is 6 min
+        nModifierInterval = 60; // test modifier interval is 1 minutes
+        nCoinbaseMaturity = 6; // test maturity is 10 blocks
+        nStakeTargetSpacing = 30; // test block spacing is 3 minutes
     }
 
     //
@@ -3909,6 +3913,8 @@ public:
 CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
 {
     CReserveKey reservekey(pwallet);
+
+    printf("CreateNewBlock %d\n",fProofOfStake);
 
     // Create new block
     auto_ptr<CBlock> pblock(new CBlock());
