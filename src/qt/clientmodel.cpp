@@ -39,6 +39,7 @@ int ClientModel::getNumConnections() const
 
 bool ClientModel::getMintReady() const
 {
+    printf("ClientModel::getMintReady() %d\n",mintReady);
     return mintReady;
 }
 
@@ -190,6 +191,12 @@ static void NotifyNumConnectionsChanged(ClientModel *clientmodel, int newNumConn
                               Q_ARG(int, newNumConnections));
 }
 
+static void NotifyMintReadyChanged(ClientModel *clientmodel, bool mintReady)
+{
+    QMetaObject::invokeMethod(clientmodel, "updateMintReady", Qt::QueuedConnection,
+                              Q_ARG(bool, mintReady));
+}
+
 static void NotifyAlertChanged(ClientModel *clientmodel, const uint256 &hash, ChangeType status)
 {
     OutputDebugStringF("NotifyAlertChanged %s status=%i\n", hash.GetHex().c_str(), status);
@@ -203,6 +210,7 @@ void ClientModel::subscribeToCoreSignals()
     // Connect signals to client
     uiInterface.NotifyBlocksChanged.connect(boost::bind(NotifyBlocksChanged, this));
     uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(NotifyNumConnectionsChanged, this, _1));
+    uiInterface.NotifyMintReadyChanged.connect(boost::bind(NotifyMintReadyChanged, this, _1));
     uiInterface.NotifyAlertChanged.connect(boost::bind(NotifyAlertChanged, this, _1, _2));
 }
 
@@ -211,5 +219,6 @@ void ClientModel::unsubscribeFromCoreSignals()
     // Disconnect signals from client
     uiInterface.NotifyBlocksChanged.disconnect(boost::bind(NotifyBlocksChanged, this));
     uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(NotifyNumConnectionsChanged, this, _1));
+    uiInterface.NotifyMintReadyChanged.disconnect(boost::bind(NotifyMintReadyChanged, this, _1));
     uiInterface.NotifyAlertChanged.disconnect(boost::bind(NotifyAlertChanged, this, _1, _2));
 }

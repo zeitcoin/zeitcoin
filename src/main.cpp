@@ -4334,6 +4334,12 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
 //            Sleep(1000);
 //        }
 //        strMintWarning = "";
+        if (pwallet->IsLocked())
+            strMintWarning = strMintMessage;
+        else
+            strMintWarning = "";
+        uiInterface.NotifyMintReadyChanged(mintReady);
+        printf ("uiInterface.NotifyMintReadyChanged(mintReady) %d\n",mintReady);
 
         //
         // Create new block

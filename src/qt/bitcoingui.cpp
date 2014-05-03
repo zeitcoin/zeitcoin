@@ -494,7 +494,6 @@ void BitcoinGUI::setNumConnections(int count)
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Zeitcoin network", "", count));
 }
 
-
 void BitcoinGUI::setMintReady(bool mintReady)
 {
     printf("setMintReady() %d\n", mintReady);
