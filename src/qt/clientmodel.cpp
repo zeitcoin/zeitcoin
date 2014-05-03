@@ -37,6 +37,11 @@ int ClientModel::getNumConnections() const
     return vNodes.size();
 }
 
+bool ClientModel::getMintReady() const
+{
+    return mintReady;
+}
+
 int ClientModel::getNumBlocks() const
 {
     return nBestHeight;
@@ -72,6 +77,11 @@ void ClientModel::updateTimer()
 void ClientModel::updateNumConnections(int numConnections)
 {
     emit numConnectionsChanged(numConnections);
+}
+
+void ClientModel::updateMintReady(bool mintReady)
+{
+    emit mintReadyChanged(mintReady);
 }
 
 void ClientModel::updateAlert(const QString &hash, int status)

@@ -795,6 +795,7 @@ bool CTxDB::LoadBlockIndex()
 
 bool CTxDB::LoadBlockIndexGuts()
 {
+    int blkCount=0;
     // Get database cursor
     Dbc* pcursor = GetCursor();
     if (!pcursor)
@@ -852,6 +853,11 @@ bool CTxDB::LoadBlockIndexGuts()
 
             if (!pindexNew->CheckIndex())
                 return error("LoadBlockIndex() : CheckIndex failed at %d", pindexNew->nHeight);
+
+            if ((pindexNew->nHeight)%1000 == 0)
+            {
+                blkCount++; printf(" #%d", blkCount*1000);
+            }
 
             // ppcoin: build setStakeSeen
             if (pindexNew->IsProofOfStake())

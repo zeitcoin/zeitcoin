@@ -126,16 +126,19 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     // Status bar notification icons
     QFrame *frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
-    frameBlocks->setMinimumWidth(56);
-    frameBlocks->setMaximumWidth(56);
+    frameBlocks->setMinimumWidth(80);
+    frameBlocks->setMaximumWidth(80);
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
     labelEncryptionIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
+    labelMintIcon = new QLabel();
     labelBlocksIcon = new QLabel();
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
+    frameBlocksLayout->addStretch();
+    frameBlocksLayout->addWidget(labelMintIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
     frameBlocksLayout->addStretch();
@@ -368,6 +371,9 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         setNumConnections(clientModel->getNumConnections());
         connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
+        setMintReady(clientModel->getMintReady());
+        connect(clientModel, SIGNAL(mintReadyChanged(bool)), this, SLOT(setMintReady(bool)));
+
         setNumBlocks(clientModel->getNumBlocks(), clientModel->getNumBlocksOfPeers());
         connect(clientModel, SIGNAL(numBlocksChanged(int,int)), this, SLOT(setNumBlocks(int,int)));
 
@@ -486,6 +492,19 @@ void BitcoinGUI::setNumConnections(int count)
     }
     labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Zeitcoin network", "", count));
+}
+
+
+void BitcoinGUI::setMintReady(bool mintReady)
+{
+    printf("setMintReady() %d\n", mintReady);
+    if (mintReady) {
+        labelMintIcon->setPixmap(QIcon(":/icons/mint_ready").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelMintIcon->setToolTip(tr("New blocks are ready for minting."));
+    } else {
+        labelMintIcon->setPixmap(QIcon(":/icons/mint_waiting").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelMintIcon->setToolTip(tr("No blocks ready for minting."));
+    }
 }
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)

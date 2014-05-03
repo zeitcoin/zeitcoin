@@ -69,6 +69,7 @@ private:
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
+    QLabel *labelMintIcon;
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
 
@@ -110,6 +111,8 @@ private:
     void createTrayIcon();
 
 public slots:
+    /** Set whether new blocks can be minted or not */
+    void setMintReady(bool mintReady);
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
     /** Set number of blocks shown in the UI */

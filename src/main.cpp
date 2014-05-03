@@ -65,6 +65,8 @@ map<uint256, uint256> mapProofOfStake;
 map<uint256, CDataStream*> mapOrphanTransactions;
 map<uint256, map<uint256, CDataStream*> > mapOrphanTransactionsByPrev;
 
+bool mintReady;
+
 // Constant stuff for coinbase transactions we create:
 CScript COINBASE_FLAGS;
 
@@ -965,7 +967,7 @@ int64 GetProofOfWorkReward(int nHeight, int64 nFees, uint256 prevHash)
 
 // miner's coin stake reward based on nBits and coin age spent (coin-days)
 // simple algorithm, not depend on the diff
-const int YEARLY_BLOCKCOUNT = 1051200;    // 365 * 2880
+const int YEARLY_BLOCKCOUNT = 1051200;  // 365 * 2880
 int64 GetProofOfStakeReward(int64 nCoinAge, unsigned int nBits, unsigned int nTime, int nHeight)
 {
     int64 nRewardCoinYear;
@@ -2020,7 +2022,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot) const
 {
     // These are checks that are independent of context
     // that can be verified before saving an orphan block.
-
+     
     // Size limits
     if (vtx.empty() || vtx.size() > MAX_BLOCK_SIZE || ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION) > MAX_BLOCK_SIZE)
         return DoS(100, error("CheckBlock() : size limits failed"));
@@ -3914,8 +3916,6 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
 {
     CReserveKey reservekey(pwallet);
 
-    printf("CreateNewBlock %d\n",fProofOfStake);
-
     // Create new block
     auto_ptr<CBlock> pblock(new CBlock());
     if (!pblock.get())
@@ -3966,7 +3966,6 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
         int64 nSearchTime = txCoinStake.nTime; // search to current time
         if (nSearchTime > nLastCoinStakeSearchTime)
         {
-            // printf(">>> OK1\n");
             if (pwallet->CreateCoinStake(*pwallet, pblock->nBits, nSearchTime-nLastCoinStakeSearchTime, txCoinStake))
             {
                 if (txCoinStake.nTime >= max(pindexPrev->GetMedianTimePast()+1, pindexPrev->GetBlockTime() - nMaxClockDrift))
@@ -4314,6 +4313,7 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
+    mintReady = false;
 
     while (fGenerateBitcoins || fProofOfStake)
     {
@@ -4328,12 +4328,12 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
                 return;
         }
 
-        while (pwallet->IsLocked())
-        {
-            strMintWarning = strMintMessage;
-            Sleep(1000);
-        }
-        strMintWarning = "";
+//        while (pwallet->IsLocked())
+//        {
+//            strMintWarning = strMintMessage;
+//            Sleep(1000);
+//        }
+//        strMintWarning = "";
 
         //
         // Create new block
@@ -4344,6 +4344,7 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
         auto_ptr<CBlock> pblock(CreateNewBlock(pwallet, fProofOfStake));
         if (!pblock.get())
             return;
+
         IncrementExtraNonce(pblock.get(), pindexPrev, nExtraNonce);
 
         if (fProofOfStake)
@@ -4352,10 +4353,7 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             if (pblock->IsProofOfStake())
             {
                 if (!pblock->SignBlock(*pwalletMain))
-                {
-                    strMintWarning = strMintMessage;
                     continue;
-                }
                 strMintWarning = "";
                 printf("CPUMiner : proof-of-stake block found %s\n", pblock->GetHash().ToString().c_str()); 
                 SetThreadPriority(THREAD_PRIORITY_NORMAL);

@@ -83,6 +83,9 @@ public:
     /** Number of network connections changed. */
     boost::signals2::signal<void (int newNumConnections)> NotifyNumConnectionsChanged;
 
+    /** Number of network connections changed. */
+    boost::signals2::signal<void (bool mintReady)> NotifyMintReadyChanged;
+
     /**
      * New, updated or cancelled alert.
      * @note called with lock cs_mapAlerts held.
