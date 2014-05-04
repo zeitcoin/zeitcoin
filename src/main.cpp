@@ -4338,8 +4338,6 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             strMintWarning = strMintMessage;
         else
             strMintWarning = "";
-        uiInterface.NotifyMintReadyChanged(mintReady);
-        printf ("uiInterface.NotifyMintReadyChanged(mintReady) %d\n",mintReady);
 
         //
         // Create new block

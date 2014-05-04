@@ -43,6 +43,7 @@ void OptionsModel::Init()
     // These are Qt-only settings:
     nDisplayUnit = settings.value("nDisplayUnit", BitcoinUnits::BTC).toInt();
     bDisplayAddresses = settings.value("bDisplayAddresses", false).toBool();
+    bDisplayDateTimeISO = settings.value("bDisplayDateTimeISO", false).toBool();
     fMinimizeToTray = settings.value("fMinimizeToTray", false).toBool();
     fMinimizeOnClose = settings.value("fMinimizeOnClose", false).toBool();
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
@@ -87,7 +88,7 @@ bool OptionsModel::Upgrade()
         }
     }
     QList<QString> boolOptions;
-    boolOptions << "bDisplayAddresses" << "fMinimizeToTray" << "fMinimizeOnClose" << "fUseProxy" << "fUseUPnP";
+    boolOptions << "bDisplayAddresses" << "bDisplayDateTimeISO" << "fMinimizeToTray" << "fMinimizeOnClose" << "fUseProxy" << "fUseUPnP";
     foreach(QString key, boolOptions)
     {
         bool value = false;
@@ -167,6 +168,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return QVariant(nDisplayUnit);
         case DisplayAddresses:
             return QVariant(bDisplayAddresses);
+        case DisplayDateTimeISO:
+            return QVariant(bDisplayDateTimeISO);
         case DetachDatabases:
             return QVariant(bitdb.GetDetach());
         case Language:
@@ -253,6 +256,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             bDisplayAddresses = value.toBool();
             settings.setValue("bDisplayAddresses", bDisplayAddresses);
             break;
+        case DisplayDateTimeISO:
+            bDisplayDateTimeISO = value.toBool();
+            settings.setValue("bDisplayDateTimeISO", bDisplayDateTimeISO);
+            break;
         case DetachDatabases: {
             bool fDetachDB = value.toBool();
             bitdb.SetDetach(fDetachDB);
@@ -306,4 +313,9 @@ int OptionsModel::getDisplayUnit()
 bool OptionsModel::getDisplayAddresses()
 {
     return bDisplayAddresses;
+}
+
+bool OptionsModel::getDisplayDateTimeISO()
+{
+    return bDisplayDateTimeISO;
 }
