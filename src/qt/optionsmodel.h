@@ -28,6 +28,7 @@ public:
         Fee,               // qint64
         DisplayUnit,       // BitcoinUnits::Unit
         DisplayAddresses,  // bool
+        DisplayDateTimeISO,// bool
         DetachDatabases,   // bool
         Language,          // QString
         CoinControlFeatures, // bool
@@ -49,12 +50,14 @@ public:
     bool getMinimizeOnClose();
     int getDisplayUnit();
     bool getDisplayAddresses();
+    bool getDisplayDateTimeISO();
     bool getCoinControlFeatures();
     QString getLanguage() { return language; }
 
 private:
     int nDisplayUnit;
     bool bDisplayAddresses;
+    bool bDisplayDateTimeISO;
     bool fMinimizeToTray;
     bool fMinimizeOnClose;
     bool fCoinControlFeatures;

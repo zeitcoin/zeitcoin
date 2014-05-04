@@ -26,6 +26,12 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #OPENSSL_INCLUDE_PATH=c:/deps/ssl/include
 #OPENSSL_LIB_PATH=c:/deps/ssl
 
+# enable for local build of SSL lib (ie. required on fedora)
+#OPENSSL_INCLUDE_PATH=~/LIBS/openssl/include/
+#OPENSSL_LIB_PATH=~/LIBS/openssl/lib/
+
+
+
 OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build

@@ -26,6 +26,7 @@ public:
     int getNumConnections() const;
     int getNumBlocks() const;
     int getNumBlocksAtStartup();
+    bool getMintReady() const;
 
     QDateTime getLastBlockDate() const;
 
@@ -58,6 +59,7 @@ private:
     void unsubscribeFromCoreSignals();
 signals:
     void numConnectionsChanged(int count);
+    void mintReadyChanged(bool mintReady);
     void numBlocksChanged(int count, int countOfPeers);
 
     //! Asynchronous error notification
@@ -66,6 +68,7 @@ signals:
 public slots:
     void updateTimer();
     void updateNumConnections(int numConnections);
+    void updateMintReady(bool mintReady);
     void updateAlert(const QString &hash, int status);
 };
 

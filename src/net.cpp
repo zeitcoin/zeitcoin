@@ -25,7 +25,7 @@
 using namespace std;
 using namespace boost;
 
-static const int MAX_OUTBOUND_CONNECTIONS = 12;
+static const int MAX_OUTBOUND_CONNECTIONS = 24;
 
 void ThreadMessageHandler2(void* parg);
 void ThreadSocketHandler2(void* parg);
@@ -485,9 +485,9 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
 
 
     /// debug print
-    printf("trying connection %s lastseen=%.1fhrs\n",
-        pszDest ? pszDest : addrConnect.ToString().c_str(),
-        pszDest ? 0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
+//    printf("trying connection %s lastseen=%.1fhrs\n",
+//        pszDest ? pszDest : addrConnect.ToString().c_str(),
+//        pszDest ? 0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
 
     // Connect
     SOCKET hSocket;
@@ -1352,7 +1352,7 @@ void ThreadOpenConnections2(void* parg)
         ProcessOneShot();
 
         vnThreadsRunning[THREAD_OPENCONNECTIONS]--;
-        Sleep(500);
+        Sleep(50);
         vnThreadsRunning[THREAD_OPENCONNECTIONS]++;
         if (fShutdown)
             return;
@@ -1430,9 +1430,8 @@ void ThreadOpenConnections2(void* parg)
                 continue;
 
             // do not allow non-default ports, unless after 50 invalid addresses selected already
-            
-			// if (addr.GetPort() != GetDefaultPort() && nTries < 50)
-            //    continue;
+//            if (addr.GetPort() != GetDefaultPort() && nTries < 50)
+//                continue;
 
             addrConnect = addr;
             break;
