@@ -496,7 +496,6 @@ void BitcoinGUI::setNumConnections(int count)
 
 void BitcoinGUI::setMintReady(bool mintReady)
 {
-    printf("setMintReady() %d\n", mintReady);
     if (mintReady) {
         labelMintIcon->setPixmap(QIcon(":/icons/mint_ready").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelMintIcon->setToolTip(tr("New blocks are ready for minting."));
