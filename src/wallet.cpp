@@ -1562,8 +1562,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         int nIn = 0;
         BOOST_FOREACH(const CWalletTx* pcoin, vwtxPrev)
         {
-            if (!SignSignature(*this, *pcoin, txNew, nIn++))
+            if (!SignSignature(*this, *pcoin, txNew, nIn++)) {
+                mintReady = true;
+                uiInterface.NotifyMintReadyChanged(mintReady);
                 return error("CreateCoinStake : failed to sign coinstake");
+            } else {
+                printf ("CreateCoinStake : signed coinstake\n");
+                mintReady = false;
+                uiInterface.NotifyMintReadyChanged(mintReady);
+            }
         }
 
         // Limit size

@@ -20,8 +20,8 @@ class SendCoinsRecipient;
 namespace GUIUtil
 {
     // Create human-readable string from date
-    QString dateTimeStr(const QDateTime &datetime);
-    QString dateTimeStr(qint64 nTime);
+    QString dateTimeStr(const QDateTime &datetime, bool iso = false);
+    QString dateTimeStr(qint64 nTime, bool iso = false);
 
     // Render Bitcoin addresses in monospace font
     QFont bitcoinAddressFont();

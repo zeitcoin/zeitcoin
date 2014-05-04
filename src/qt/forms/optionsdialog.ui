@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -350,6 +350,13 @@
          </property>
          <property name="text">
           <string>Display coin &amp;control features (experts only!)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="displayDateTimeISO">
+         <property name="text">
+          <string>Display Date and Time in ISO format</string>
          </property>
         </widget>
        </item>

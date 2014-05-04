@@ -320,7 +320,7 @@ QString TransactionTableModel::formatTxDate(const TransactionRecord *wtx) const
 {
     if(wtx->time)
     {
-        return GUIUtil::dateTimeStr(wtx->time);
+        return GUIUtil::dateTimeStr(wtx->time, walletModel->getOptionsModel()->getDisplayDateTimeISO());
     }
     else
     {

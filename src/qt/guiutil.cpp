@@ -42,14 +42,17 @@
 
 namespace GUIUtil {
 
-QString dateTimeStr(const QDateTime &date)
+QString dateTimeStr(const QDateTime &date, bool iso)
 {
-    return date.date().toString(Qt::SystemLocaleShortDate) + QString(" ") + date.toString("hh:mm");
+    if (iso)
+        return date.date().toString(Qt::ISODate) + QString(" ") + date.toString("hh:mm");
+    else
+        return date.date().toString(Qt::SystemLocaleShortDate) + QString(" ") + date.toString("hh:mm");
 }
 
-QString dateTimeStr(qint64 nTime)
+QString dateTimeStr(qint64 nTime, bool iso)
 {
-    return dateTimeStr(QDateTime::fromTime_t((qint32)nTime));
+    return dateTimeStr(QDateTime::fromTime_t((qint32)nTime),iso);
 }
 
 QFont bitcoinAddressFont()

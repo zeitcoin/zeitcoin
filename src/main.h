@@ -35,8 +35,9 @@ static const int64 MIN_RELAY_TX_FEE = 10 * CENT;
 static const int64 MAX_MONEY = 90000000000 * COIN;          
 static const int64 CIRCULATION_MONEY = MAX_MONEY;
 static const double TAX_PERCENTAGE = 0.01;
-static const int64 MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;    // 5% annual interest
-static const int CUTOFF_POW_BLOCK = 460000;
+static const int64 MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;   // 5% annual interest
+
+static const int CUTOFF_POW_BLOCK = 270000;
 
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
 
@@ -82,6 +83,7 @@ extern CCriticalSection cs_setpwalletRegistered;
 extern std::set<CWallet*> setpwalletRegistered;
 extern unsigned char pchMessageStart[4];
 extern std::map<uint256, CBlock*> mapOrphanBlocks;
+extern bool mintReady;
 
 // Settings
 extern int64 nTransactionFee;
@@ -587,7 +589,7 @@ public:
         so may not be able to calculate this.
 
         @param[in] mapInputs    Map of previous transactions that have outputs we're spending
-        @return    Sum of value of all inputs (scriptSigs)
+        @return Sum of value of all inputs (scriptSigs)
         @see CTransaction::FetchInputs
      */
     int64 GetValueIn(const MapPrevTx& mapInputs) const;
