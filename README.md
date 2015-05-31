@@ -1,6 +1,6 @@
 ![enter image description here](http://new.zeit-coin.net/wp-content/uploads/zeitlogo4.png)
 
-Zeitcoin [**ZEIT**] Version 2.0.1.6 (Gauntlet)
+Zeitcoin [**ZEIT**] Version 2.0.1.7 (Gauntlet)
 
 Zeitcoin is an innovative, secure and energy efficient PoS coin.
 
