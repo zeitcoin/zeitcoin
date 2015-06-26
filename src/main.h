@@ -54,7 +54,8 @@ static const int fHaveUPnP = false;
 static const uint256 hashGenesisBlockOfficial("0xdea6b9e435686c66f5178eb9f04e18b4fc040a639ccd5cd90f31e5343afb5b36");
 static const uint256 hashGenesisBlockTestNet ("0xdea6b9e435686c66f5178eb9f04e18b4fc040a639ccd5cd90f31e5343afb5b36");
 
-static const int64 nMaxClockDrift = 2 * 60 * 60;        // two hours
+inline int64 PastDrift(int64 nTime)   { return nTime - 2 * 60 * 60; } // up to 2 hours from the past
+inline int64 FutureDrift(int64 nTime) { return nTime + 2 * 60 * 60; } // up to 2 hours from the future
 
 extern CScript COINBASE_FLAGS;
 
@@ -1414,7 +1415,7 @@ public:
 
     uint256 GetBlockHash() const
     {
-        if (fUseFastIndex && (nTime < GetAdjustedTime() - 12 * nMaxClockDrift) && blockHash != 0)
+        if (fUseFastIndex && (nTime < GetAdjustedTime() - 24 * 60 * 60) && blockHash != 0)
         return blockHash;
         CBlock block;
         block.nVersion        = nVersion;
