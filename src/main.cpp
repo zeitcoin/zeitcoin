@@ -42,8 +42,8 @@ static CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
 static CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 20);
 static CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 20);
 
-unsigned int nStakeMinAge = 60 * 60 * 24;         // minimum age for coin age: 20d
-unsigned int nStakeMaxAge = 60 * 60 * 24 * 20;    // stake age of full weight: 40d
+unsigned int nStakeMinAge = 60 * 60 * 24;         // minimum age for coin age: 24h
+unsigned int nStakeMaxAge = 60 * 60 * 24 * 20;    // stake age of full weight: 20d
 unsigned int nStakeTargetSpacing = 30;            // 30 sec block spacing
 
 int64 nChainStartTime = 1393346841;
@@ -984,8 +984,8 @@ int64 GetProofOfStakeReward(int64 nCoinAge, unsigned int nBits, unsigned int nTi
         nRewardCoinYear = 4 * MAX_MINT_PROOF_OF_STAKE;
     else if(nHeight < (3 * YEARLY_BLOCKCOUNT))
         nRewardCoinYear = 3 * MAX_MINT_PROOF_OF_STAKE;
-	else if (nHeight > 3511228)
-		nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE/10000;  // Ultra Low Interest .0005%
+    else if(nTime > LOW_INFLATION_FORKTIME)
+        nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE / 10000;  // Ultra Low Interest .0005%
 
 
     int64 nSubsidy = nCoinAge * nRewardCoinYear / 365;
@@ -2548,6 +2548,20 @@ bool LoadBlockIndex(bool fAllowNew)
         nCoinbaseMaturity = 6; // test maturity is 10 blocks
         nStakeTargetSpacing = 30; // test block spacing is 3 minutes
     }
+    if (GetTime()<=LOW_INFLATION_FORKTIME) // Before 2017-05-10 12:00 UTC
+    {
+        nStakeMinAge = 60 * 60 * 24 * 20;
+        nStakeMaxAge = 60 * 60 * 24 * 40;
+        nModifierInterval = 6 * 60 * 60;
+    }
+    if (GetTime()>LOW_INFLATION_FORKTIME) // After 2017-05-10 12:00 UTC
+    {
+        nStakeMinAge = 60 * 60 * 24;
+        nStakeMaxAge = 60 * 60 * 24 * 20;
+        nModifierInterval = 10 * 60;
+    }
+
+
 
     //
     // Load block index

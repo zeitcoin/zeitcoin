@@ -39,7 +39,9 @@ static const int64 MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;   // 5% annual interes
 
 // Hard Fork constants
 static const int CUTOFF_POW_BLOCK = 270000;
-static const int FORK_2017_TIME = 1438419600; // Hardfork 2015-08-01 10:00:00 UTC
+static const int FORK_2017_TIME = 1438419600; // Hardfork 2015-08-01 10:00 UTC
+static const int LOW_INFLATION_FORKTIME = 1494417600; //Hardfork 2017-05-10 12:00 UTC))
+
 
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
 
