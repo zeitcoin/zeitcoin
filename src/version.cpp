@@ -9,19 +9,19 @@
 // for both bitcoind and bitcoin-qt, to make it harder for attackers to
 // target servers or GUI users specifically.
 #ifdef _WIN32
-const std::string CLIENT_NAME("Gauntlet_WIN");
+const std::string CLIENT_NAME("Gauntlet-win32");
 #elif __arm__
-const std::string CLIENT_NAME("Gauntlet_ARM");
+const std::string CLIENT_NAME("Gauntlet-arm");
 #elif __APPLE__
-const std::string CLIENT_NAME("Gauntlet_MAC");
+const std::string CLIENT_NAME("Gauntlet-macos");
 #elif __linux
-const std::string CLIENT_NAME("Gauntlet_LINUX");
+const std::string CLIENT_NAME("Gauntlet-linux");
 #elif __unix
-const std::string CLIENT_NAME("Gauntlet_UNIX");
+const std::string CLIENT_NAME("Gauntlet-unix");
 #elif __posix
-const std::string CLIENT_NAME("Gauntlet_POSIX");
+const std::string CLIENT_NAME("Gauntlet-posix");
 #else
-const std::string CLIENT_NAME("Gauntlet");
+const std::string CLIENT_NAME("Gauntlet-unknown");
 #endif
 
 
