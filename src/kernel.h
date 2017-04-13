@@ -7,7 +7,7 @@
 #include "main.h"
 
 // MODIFIER_INTERVAL: time to elapse before new modifier is computed
-static const unsigned int MODIFIER_INTERVAL = 10 * 60; // 10 Minutes
+static const unsigned int MODIFIER_INTERVAL = 200 * 60;  // 200 minutes
 extern unsigned int nModifierInterval;
 
 // MODIFIER_INTERVAL_RATIO:

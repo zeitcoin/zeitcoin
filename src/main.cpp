@@ -1908,7 +1908,7 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, uint64& nCoinAge) const
         CBlock block;
         if (!block.ReadFromDisk(txindex.pos.nFile, txindex.pos.nBlockPos, false))
             return false; // unable to read block of previous transaction
-        if (block.GetBlockTime() + nStakeMinAge > nTime)
+        if (block.GetBlockTime() + StakeMinAge(nTime) > nTime)
             continue; // only count coins meeting min age requirement
 
         int64 nValueIn = txPrev.vout[txin.prevout.n].nValue;
@@ -2548,20 +2548,6 @@ bool LoadBlockIndex(bool fAllowNew)
         nCoinbaseMaturity = 6; // test maturity is 10 blocks
         nStakeTargetSpacing = 30; // test block spacing is 3 minutes
     }
-    if (GetTime()<=LOW_INFLATION_FORKTIME) // Before 2017-05-10 12:00 UTC
-    {
-        nStakeMinAge = 60 * 60 * 24 * 20;
-        nStakeMaxAge = 60 * 60 * 24 * 40;
-        nModifierInterval = 6 * 60 * 60;
-    }
-    if (GetTime()>LOW_INFLATION_FORKTIME) // After 2017-05-10 12:00 UTC
-    {
-        nStakeMinAge = 60 * 60 * 24;
-        nStakeMaxAge = 60 * 60 * 24 * 20;
-        nModifierInterval = 10 * 60;
-    }
-
-
 
     //
     // Load block index
@@ -3262,7 +3248,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                 printf("  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString().substr(0,20).c_str());
                 // ppcoin: tell downloading node about the latest block if it's
                 // without risk being rejected due to stake connection check
-                if (hashStop != hashBestChain && pindex->GetBlockTime() + nStakeMinAge > pindexBest->GetBlockTime())
+                if (hashStop != hashBestChain && pindex->GetBlockTime() + StakeMinAge(pindexBest->GetBlockTime()) > pindexBest->GetBlockTime())
                     pfrom->PushInventory(CInv(MSG_BLOCK, hashBestChain));
                 break;
             }

@@ -74,6 +74,17 @@ inline int64 FutureDrift(int64_t nTime)
         return nTime + 2 * 60 * 60; // up to 120 minutes from the future
 }
 
+inline int64 StakeMinAge(int64_t nTime)
+{
+    if (nTime > LOW_INFLATION_FORKTIME)
+        return 60 * 60 * 24;
+    else
+        return 60 * 60 * 24 * 20;
+}
+
+
+
+
 extern CScript COINBASE_FLAGS;
 
 
@@ -122,7 +133,7 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock);
 bool CheckDiskSpace(uint64 nAdditionalBytes=0);
 FILE* OpenBlockFile(unsigned int nFile, unsigned int nBlockPos, const char* pszMode="rb");
 FILE* AppendBlockFile(unsigned int& nFileRet);
-bool LoadBlockIndex(bool fAllowNew=true);
+bool LoadBlockIndex(bool fAllowNew=1);
 void PrintBlockTree();
 CBlockIndex* FindBlockByHeight(int nHeight);
 bool ProcessMessages(CNode* pfrom);
