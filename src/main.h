@@ -40,7 +40,9 @@ static const int64 MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;   // 5% annual interes
 // Hard Fork constants
 static const int CUTOFF_POW_BLOCK = 270000;
 static const int FORK_2017_TIME = 1438419600; // Hardfork 2015-08-01 10:00 UTC
-static const int LOW_INFLATION_FORKTIME = 1494417600; //Hardfork 2017-05-10 12:00 UTC))
+static const int LOW_INFLATION_FORKTIME = 1494417600; //Hardfork 2017-05-10 12:00 UTC
+//static const int LOW_INFLATION_FORKTIME = 1492596000; //Hardfork 2017-04-19 12:00 UTC *FOR TESTING*
+static const int LOW_INFLATION_FORKBLOCK = 3565140;
 
 
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
@@ -77,14 +79,34 @@ inline int64 FutureDrift(int64_t nTime)
 inline int64 StakeMinAge(int64_t nTime)
 {
     if (nTime > LOW_INFLATION_FORKTIME)
-        return 60 * 60 * 24;
+        return 60 * 60 * 24; // 24 Hours
     else
-        return 60 * 60 * 24 * 20;
+        return 60 * 60 * 24 * 20; // 20 Days
 }
 
+inline int64 StakeMaxAge(int64_t nTime)
+{
+    if (nTime > LOW_INFLATION_FORKTIME)
+        return 60 * 60 * 24 * 20; // 20 Days
+    else
+        return 60 * 60 * 24 * 40; // 40 Days
+}
 
+inline int64 StakeSplitAge(int64_t nTime)
+{
+    if (nTime > LOW_INFLATION_FORKTIME)
+        return 60 * 60 * 25; // 25 Hours
+    else
+        return 60 * 60 * 24 * 30; // 30 Days
+}
 
-
+inline int64 ModifierInterval(int64_t nTime)
+{
+    if (nTime > LOW_INFLATION_FORKTIME)
+        return 200 * 60; // 200 Minutes
+    else
+        return 6 * 60 * 60; // 21600 Minutes
+}
 extern CScript COINBASE_FLAGS;
 
 

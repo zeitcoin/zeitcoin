@@ -43,7 +43,7 @@ static CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 20);
 static CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 20);
 
 unsigned int nStakeMinAge = 60 * 60 * 24;         // minimum age for coin age: 24h
-unsigned int nStakeMaxAge = 60 * 60 * 24 * 20;    // stake age of full weight: 20d
+unsigned int nStakeMaxAge = 60 * 60 * 24 * 40;    // stake age of full weight: 20d
 unsigned int nStakeTargetSpacing = 30;            // 30 sec block spacing
 
 int64 nChainStartTime = 1393346841;
@@ -3248,7 +3248,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                 printf("  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString().substr(0,20).c_str());
                 // ppcoin: tell downloading node about the latest block if it's
                 // without risk being rejected due to stake connection check
-                if (hashStop != hashBestChain && pindex->GetBlockTime() + StakeMinAge(pindexBest->GetBlockTime()) > pindexBest->GetBlockTime())
+                if (hashStop != hashBestChain && pindex->GetBlockTime() + StakeMinAge(pindex->GetBlockTime()) > pindexBest->GetBlockTime())
                     pfrom->PushInventory(CInv(MSG_BLOCK, hashBestChain));
                 break;
             }
