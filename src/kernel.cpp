@@ -289,7 +289,7 @@ bool CheckStakeKernelHash(unsigned int nBits, const CBlock& blockFrom, unsigned 
     // v0.3 protocol kernel hash weight starts from 0 at the min age
     // this change increases active coins participating the hash and helps
     // to secure the network when proof-of-stake difficulty is low
-    int64 nTimeWeight = min((int64)nTimeTx - txPrev.nTime, StakeMaxAge(nTimeTx)) - StakeMinAge(nTimeTx);
+    int64 nTimeWeight = min((int64)nTimeTx - txPrev.nTime, StakeMaxAge(nTimeBlockFrom)) - StakeMinAge(nTimeBlockFrom);
     CBigNum bnCoinDayWeight = CBigNum(nValueIn) * nTimeWeight / COIN / (24 * 60 * 60);
 
     // printf(">>> CheckStakeKernelHash: nTimeWeight = %"PRI64d"\n", nTimeWeight);
