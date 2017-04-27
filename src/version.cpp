@@ -9,19 +9,19 @@
 // for both bitcoind and bitcoin-qt, to make it harder for attackers to
 // target servers or GUI users specifically.
 #ifdef _WIN32
-const std::string CLIENT_NAME("Gauntlet-win32");
+const std::string CLIENT_NAME("Gauntlet_WIN");
 #elif __arm__
-const std::string CLIENT_NAME("Gauntlet-arm");
+const std::string CLIENT_NAME("Gauntlet_ARM");
 #elif __APPLE__
-const std::string CLIENT_NAME("Gauntlet-macos");
+const std::string CLIENT_NAME("Gauntlet_MAC");
 #elif __linux
-const std::string CLIENT_NAME("Gauntlet-linux");
+const std::string CLIENT_NAME("Gauntlet_LINUX");
 #elif __unix
-const std::string CLIENT_NAME("Gauntlet-unix");
+const std::string CLIENT_NAME("Gauntlet_UNIX");
 #elif __posix
-const std::string CLIENT_NAME("Gauntlet-posix");
+const std::string CLIENT_NAME("Gauntlet_POSIX");
 #else
-const std::string CLIENT_NAME("Gauntlet-unknown");
+const std::string CLIENT_NAME("Gauntlet");
 #endif
 
 
@@ -52,7 +52,7 @@ const std::string CLIENT_NAME("Gauntlet-unknown");
 #define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
 #    define GIT_COMMIT_ID ""
-#    define GIT_COMMIT_DATE "2017-04-04"
+#    define GIT_COMMIT_DATE "$Format:%cD"
 #endif
 
 #define BUILD_DESC_FROM_COMMIT(maj,min,rev,build,commit) \

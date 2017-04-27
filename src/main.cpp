@@ -42,8 +42,8 @@ static CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
 static CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 20);
 static CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 20);
 
-unsigned int nStakeMinAge = 60 * 60 * 24;         // minimum age for coin age: 24h
-unsigned int nStakeMaxAge = 60 * 60 * 24 * 40;    // stake age of full weight: 20d
+unsigned int nStakeMinAge = 60 * 60 * 24 * 20;    // minimum age for coin age: 20d
+unsigned int nStakeMaxAge = 60 * 60 * 24 * 40;    // stake age of full weight: 40d
 unsigned int nStakeTargetSpacing = 30;            // 30 sec block spacing
 
 int64 nChainStartTime = 1393346841;
@@ -984,9 +984,6 @@ int64 GetProofOfStakeReward(int64 nCoinAge, unsigned int nBits, unsigned int nTi
         nRewardCoinYear = 4 * MAX_MINT_PROOF_OF_STAKE;
     else if(nHeight < (3 * YEARLY_BLOCKCOUNT))
         nRewardCoinYear = 3 * MAX_MINT_PROOF_OF_STAKE;
-    else if(nTime > LOW_INFLATION_FORKTIME)
-        nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE / 10000;  // Ultra Low Interest .0005%
-
 
     int64 nSubsidy = nCoinAge * nRewardCoinYear / 365;
 
@@ -1908,7 +1905,7 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, uint64& nCoinAge) const
         CBlock block;
         if (!block.ReadFromDisk(txindex.pos.nFile, txindex.pos.nBlockPos, false))
             return false; // unable to read block of previous transaction
-        if (block.GetBlockTime() + StakeMinAge(block.GetBlockTime()) > nTime)
+        if (block.GetBlockTime() + nStakeMinAge > nTime)
             continue; // only count coins meeting min age requirement
 
         int64 nValueIn = txPrev.vout[txin.prevout.n].nValue;
@@ -3248,7 +3245,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                 printf("  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString().substr(0,20).c_str());
                 // ppcoin: tell downloading node about the latest block if it's
                 // without risk being rejected due to stake connection check
-                if (hashStop != hashBestChain && pindex->GetBlockTime() + StakeMinAge(pindex->GetBlockTime()) > pindexBest->GetBlockTime())
+                if (hashStop != hashBestChain && pindex->GetBlockTime() + nStakeMinAge > pindexBest->GetBlockTime())
                     pfrom->PushInventory(CInv(MSG_BLOCK, hashBestChain));
                 break;
             }
