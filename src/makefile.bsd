@@ -4,6 +4,7 @@
 
 USE_UPNP:=0
 USE_IPV6:=1
+USE_LEVELDB:=1
 
 LINK:=$(CXX)
 
@@ -133,10 +134,27 @@ OBJS= \
     obj/pbkdf2.o \
     obj/scrypt_mine.o \
     obj/scrypt-x86.o \
+	obj/scrypt-arm.o \
     obj/scrypt-x86_64.o
 
 
 all: zeitcoind
+
+#
+# LevelDB support
+#
+ifeq (${USE_LEVELDB}, 1)
+LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
+DEFS += $(addprefix -I,$(CURDIR)/leveldb/include) -DUSE_LEVELDB
+DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
+OBJS += obj/txdb-leveldb.o
+leveldb/libleveldb.a:
+	@echo "Building LevelDB ..."; cd leveldb; make libleveldb.a libmemenv.a; cd ..;
+obj/txdb-leveldb.o: leveldb/libleveldb.a
+endif
+ifneq (${USE_LEVELDB}, 1)
+OBJS += obj/txdb-bdb.o
+endif
 
 test check: test_zeitcoin FORCE
 	./test_zeitcoin
@@ -151,6 +169,9 @@ version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
 obj/scrypt-x86.o: scrypt-x86.S
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+
+obj/scrypt-arm.o: scrypt-arm.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 obj/scrypt-x86_64.o: scrypt-x86_64.S

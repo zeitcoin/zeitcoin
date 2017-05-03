@@ -7,7 +7,7 @@
 
 #include "checkpoints.h"
 
-#include "db.h"
+#include "txdb.h"
 #include "main.h"
 #include "uint256.h"
 
@@ -30,7 +30,13 @@ namespace Checkpoints
         (100020, uint256("0xc7dd597748546c533de595d148a7aedbff4b9942ef5ef243ef4b133aa0ebc49b"))
         (150100, uint256("0x1b80b5b0b9d38cb97e0d3020a25137d890c520a5d307324dab0d146b2206e530"))
         (200000, uint256("0x0000000fec0f34603367926e04491d39755f5b7d89b47cd21d603ac39f42e673"))
-        ;
+        (510003, uint256("0x0f4790789a55858cc3e46b449a3a3e4f45d474efc900746508c46802bca2e9f4"))
+        (741427, uint256("0xf05750b131f09a2f8554ac40ddf5de8eab4bb8f8fa1999f3d8d6878d0c1fc13c"))
+        (765604, uint256("0xb2c56dfbefc167faafc6b10d999cf0d90945bd6de41d64dc4b9a2584eadfa915"))
+        (966458, uint256("0x27c076396dd490c8800d429f3e669c527358f406318a11930c004a4de598f02b"))
+        (1100000, uint256("0x49da37887c0beeab491d7618eca16cd321ebf02fcb9d12974275e29d42e44650"))
+        (1451000, uint256("0xa9da70aa075070227d189b7ffaa7610c90a31268e2be12fc02366976ad8b5f72"))
+	;
 
     static MapCheckpoints mapCheckpointsTestnet =
         boost::assign::map_list_of
@@ -140,7 +146,11 @@ namespace Checkpoints
         }
         if (!txdb.TxnCommit())
             return error("WriteSyncCheckpoint(): failed to commit to db sync checkpoint %s", hashCheckpoint.ToString().c_str());
+
+#ifndef USE_LEVELDB
         txdb.Close();
+#endif
+
 
         Checkpoints::hashSyncCheckpoint = hashCheckpoint;
         return true;
@@ -171,7 +181,9 @@ namespace Checkpoints
                     return error("AcceptPendingSyncCheckpoint: SetBestChain failed for sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
                 }
             }
-            txdb.Close();
+#ifndef USE_LEVELDB
+        txdb.Close();
+#endif
 
             if (!WriteSyncCheckpoint(hashPendingCheckpoint))
                 return error("AcceptPendingSyncCheckpoint(): failed to write sync checkpoint %s", hashPendingCheckpoint.ToString().c_str());
@@ -369,7 +381,7 @@ namespace Checkpoints
 }
 
 // ppcoin: sync-checkpoint master key
-const std::string CSyncCheckpoint::strMasterPubKey = "04effee1387ea27177647e08c06fffdc7a222529a91e3e8e24936ea08563f7cc90a9d1885d6d6ffd14fdfec232a5c2b532b6c42119afa9d1e7d270f2e336fbde70";
+const std::string CSyncCheckpoint::strMasterPubKey = "042b60c34531cbe405c22d384e7ef0a7ea627bf82001dc458092b7e23ddd49ed20275a3fa73a3d12840c3114101a93db058d3fa4b52351fd1be5ae1f4c5d9de319";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 
@@ -429,7 +441,9 @@ bool CSyncCheckpoint::ProcessSyncCheckpoint(CNode* pfrom)
             return error("ProcessSyncCheckpoint: SetBestChain failed for sync checkpoint %s", hashCheckpoint.ToString().c_str());
         }
     }
-    txdb.Close();
+#ifndef USE_LEVELDB
+        txdb.Close();
+#endif
 
     if (!Checkpoints::WriteSyncCheckpoint(hashCheckpoint))
         return error("ProcessSyncCheckpoint(): failed to write sync checkpoint %s", hashCheckpoint.ToString().c_str());

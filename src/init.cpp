@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2012 The Bitcoin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#include "db.h"
+#include "txdb.h"
 #include "walletdb.h"
 #include "bitcoinrpc.h"
 #include "net.h"
@@ -26,6 +26,7 @@ using namespace boost;
 
 CWallet* pwalletMain;
 CClientUIInterface uiInterface;
+bool fUseFastIndex;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -354,6 +355,8 @@ bool AppInit2()
     if (fTestNet) {
         SoftSetBoolArg("-irc", true);
     }
+    
+    fUseFastIndex = GetBoolArg("-fastindex", true);
 
     if (mapArgs.count("-bind")) {
         // when specifying an explicit binding address, you want to listen on it
@@ -808,6 +811,7 @@ bool AppInit2()
             if (file)
                 LoadExternalBlockFile(file);
         }
+        exit(0);
     }
 
     filesystem::path pathBootstrap = GetDataDir() / "bootstrap.dat";

@@ -2,25 +2,28 @@
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-USE_UPNP:=0
+USE_UPNP:=1
 USE_IPV6:=0
+USE_LEVELDB:=1
+
+BOOST_SUFFIX?=-mgw49-mt-s-1_55
 
 INCLUDEPATHS= \
- -I"C:/deps/boost_1_53_0" \
+ -I"C:/deps/boost_1_55_0" \
  -I"C:/deps/db-4.8.30.NC/build_unix" \
- -I"C:/deps/openssl-1.0.1g/include"
+ -I"C:/deps/openssl-1.0.1j/include"
  
 LIBPATHS= \
- -L"C:/deps/boost_1_53_0/stage/lib" \
+ -L"C:/deps/boost_1_55_0/stage/lib" \
  -L"C:/deps/db-4.8.30.NC/build_unix" \
- -L"C:/deps/openssl-1.0.1g" 
+ -L"C:/deps/openssl-1.0.1j" 
 
 
 LIBS= \
- -l boost_system-mgw48-mt-s-1_53 \
- -l boost_filesystem-mgw48-mt-s-1_53 \
- -l boost_program_options-mgw48-mt-s-1_53 \
- -l boost_thread-mgw48-mt-s-1_53 \
+ -l boost_system-mgw49-mt-s-1_55 \
+ -l boost_filesystem-mgw49-mt-s-1_55 \
+ -l boost_program_options-mgw49-mt-s-1_55 \
+ -l boost_thread-mgw49-mt-s-1_55 \
  -l db_cxx \
  -l ssl \
  -l crypto
@@ -28,7 +31,7 @@ LIBS= \
 DEFS=-DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE -D__NO_SYSTEM_INCLUDES
 DEBUGFLAGS=-g
 CFLAGS=-mthreads -O2 -msse2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
-LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat
+LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat --large-address-aware -static
 
 TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
 
@@ -86,6 +89,22 @@ OBJS= \
     obj/scrypt-x86_64.o
 
 all: zeitcoind.exe
+
+#
+# LevelDB support
+#
+ifdef USE_LEVELDB
+LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
+DEFS += $(addprefix -I,$(CURDIR)/leveldb/include) -DUSE_LEVELDB
+DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
+OBJS += obj/txdb-leveldb.o
+leveldb/libleveldb.a:
+	cd leveldb; make; cd ..
+obj/txdb-leveldb.o: leveldb/libleveldb.lib
+else
+OBJS += obj/txdb-bdb.o
+endif
+
 
 test check: test_zeitcoin.exe FORCE
 	test_zeitcoin.exe

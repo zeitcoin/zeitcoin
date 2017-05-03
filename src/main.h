@@ -37,7 +37,9 @@ static const int64 CIRCULATION_MONEY = MAX_MONEY;
 static const double TAX_PERCENTAGE = 0.01;
 static const int64 MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;   // 5% annual interest
 
+// Hard Fork constants
 static const int CUTOFF_POW_BLOCK = 270000;
+static const int FORK_2017_TIME = 1438419600; // Hardfork 2015-08-01 10:00:00 UTC
 
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
 
@@ -54,7 +56,21 @@ static const int fHaveUPnP = false;
 static const uint256 hashGenesisBlockOfficial("0xdea6b9e435686c66f5178eb9f04e18b4fc040a639ccd5cd90f31e5343afb5b36");
 static const uint256 hashGenesisBlockTestNet ("0xdea6b9e435686c66f5178eb9f04e18b4fc040a639ccd5cd90f31e5343afb5b36");
 
-static const int64 nMaxClockDrift = 2 * 60 * 60;        // two hours
+inline int64 PastDrift(int64_t nTime)
+{
+    if (nTime > FORK_2017_TIME)
+        return nTime - 1 * 60; // up to 1 minute from the past
+    else
+        return nTime - 2 * 60 * 60; // up to 120 minutes from the past
+}
+
+inline int64 FutureDrift(int64_t nTime)
+{
+    if (nTime > FORK_2017_TIME)
+        return nTime + 1 * 60; // up to 1 minute from the future
+    else
+        return nTime + 2 * 60 * 60; // up to 120 minutes from the future
+}
 
 extern CScript COINBASE_FLAGS;
 
@@ -67,8 +83,8 @@ extern CBlockIndex* pindexGenesisBlock;
 extern unsigned int nStakeMinAge;
 extern int nCoinbaseMaturity;
 extern int nBestHeight;
-extern CBigNum bnBestChainTrust;
-extern CBigNum bnBestInvalidTrust;
+extern uint256 nBestChainTrust;
+extern uint256 nBestInvalidTrust;
 extern uint256 hashBestChain;
 extern CBlockIndex* pindexBest;
 extern unsigned int nTransactionsUpdated;
@@ -87,6 +103,7 @@ extern bool mintReady;
 
 // Settings
 extern int64 nTransactionFee;
+extern bool fUseFastIndex;
 
 // Minimum disk space required - used in CheckDiskSpace()
 static const uint64 nMinDiskSpace = 52428800;
@@ -1131,7 +1148,7 @@ public:
     CBlockIndex* pnext;
     unsigned int nFile;
     unsigned int nBlockPos;
-    CBigNum bnChainTrust; // ppcoin: trust score of block chain
+    uint256 nChainTrust; // ppcoin: trust score of block chain
     int nHeight;
 
     int64 nMint;
@@ -1168,7 +1185,7 @@ public:
         nFile = 0;
         nBlockPos = 0;
         nHeight = 0;
-        bnChainTrust = 0;
+        nChainTrust = 0;
         nMint = 0;
         nMoneySupply = 0;
         nFlags = 0;
@@ -1193,7 +1210,7 @@ public:
         nFile = nFileIn;
         nBlockPos = nBlockPosIn;
         nHeight = 0;
-        bnChainTrust = 0;
+        nChainTrust = 0;
         nMint = 0;
         nMoneySupply = 0;
         nFlags = 0;
@@ -1242,7 +1259,7 @@ public:
         return (int64)nTime;
     }
 
-    CBigNum GetBlockTrust() const;
+    uint256 GetBlockTrust() const;
 
     bool IsInMainChain() const
     {
@@ -1354,6 +1371,9 @@ public:
 /** Used to marshal pointers into hashes for db storage. */
 class CDiskBlockIndex : public CBlockIndex
 {
+private:
+	uint256 blockHash;
+	
 public:
     uint256 hashPrev;
     uint256 hashNext;
@@ -1362,6 +1382,7 @@ public:
     {
         hashPrev = 0;
         hashNext = 0;
+        blockHash = 0;
     }
 
     explicit CDiskBlockIndex(CBlockIndex* pindex) : CBlockIndex(*pindex)
@@ -1403,10 +1424,14 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        READWRITE(blockHash);
+
     )
 
     uint256 GetBlockHash() const
     {
+        if (fUseFastIndex && (nTime < GetAdjustedTime() - 24 * 60 * 60) && blockHash != 0)
+        return blockHash;
         CBlock block;
         block.nVersion        = nVersion;
         block.hashPrevBlock   = hashPrev;
@@ -1414,9 +1439,12 @@ public:
         block.nTime           = nTime;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
-        return block.GetHash();
-    }
+        //return block.GetHash();
+    
 
+	const_cast<CDiskBlockIndex*>(this)->blockHash = block.GetHash();
+	return blockHash;
+      }
 
     std::string ToString() const
     {
@@ -1610,3 +1638,6 @@ public:
 extern CTxMemPool mempool;
 
 #endif
+bool LoadExternalBlockFile(FILE* fileIn);
+
+unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake);

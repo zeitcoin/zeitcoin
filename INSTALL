@@ -1,9 +1,11 @@
-Building Zeitcoin
+Building ZeitCoin
 
-See doc/readme-qt.rst for instructions on building Zeitcoin QT,
+Wallet:
+See doc/readme-qt.rst for instructions on building zeitcoin-qt,
 the intended-for-end-users, nice-graphical-interface, reference
-implementation of Zeitcoin.
+implementation of ZeitCoin.
 
-See doc/build-*.txt for instructions on building Zeitcoind,
+Server, Daemon:
+See doc/build-*.txt for instructions on building zeitcoind,
 the intended-for-services, no-graphical-interface, reference
-implementation of Zeitcoin.
+implementation of ZeitCoin.

@@ -215,7 +215,9 @@ boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 boost::filesystem::path GetConfigFile();
 boost::filesystem::path GetPidFile();
+#ifndef WIN32
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);
+#endif
 void ReadConfigFile(std::map<std::string, std::string>& mapSettingsRet, std::map<std::string, std::vector<std::string> >& mapMultiSettingsRet);
 #ifdef WIN32
 boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
@@ -540,6 +542,7 @@ private:
     std::vector<T> vValues;
     std::vector<T> vSorted;
     unsigned int nSize;
+	T tInitial;
 public:
     CMedianFilter(unsigned int size, T initial_value):
         nSize(size)
@@ -547,6 +550,7 @@ public:
         vValues.reserve(size);
         vValues.push_back(initial_value);
         vSorted = vValues;
+		tInitial = initial_value;
     }
 
     void input(T value)
@@ -561,7 +565,28 @@ public:
         std::copy(vValues.begin(), vValues.end(), vSorted.begin());
         std::sort(vSorted.begin(), vSorted.end());
     }
+	
+	// remove last instance of a value
+     void removeLast(T value)
+     {
+         for (int i = vValues.size()-1; i >= 0; --i)
+         {
+             if (vValues[i] == value)
+             {
+                 vValues.erase(vValues.begin()+i);
+                 break;
+             }
+         }
+         if (vValues.empty())
+         {
+             vValues.push_back(tInitial);
 
+ 			 }
+ 
+         vSorted.resize(vValues.size());
+         std::copy(vValues.begin(), vValues.end(), vSorted.begin());
+         std::sort(vSorted.begin(), vSorted.end());
+     }
     T median() const
     {
         int size = vSorted.size();
