@@ -47,7 +47,7 @@ unsigned int nStakeMaxAge = 60 * 60 * 24 * 40;    // stake age of full weight: 4
 unsigned int nStakeMinAgeV2 = 60 * 60 * 24 * 1;    // minimum age for coin age: 1d
 unsigned int nStakeMaxAgeV2 = 60 * 60 * 24 * 20;    // stake age of full weight: 20d
 unsigned int nModifierInterval = 6 * 60 * 60;		// old interval of 6 hours between stake modifiers
-unsigned int nModifierIntervalV2 = 200 * 60;			// new interval of 200 mins between stake modifiers
+unsigned int nModifierIntervalV2 = 10 * 60;			// new interval of 10 mins between stake modifiers
 unsigned int nStakeTargetSpacing = 30;            // 30 sec block spacing
 
 int64 nChainStartTime = 1393346841;
