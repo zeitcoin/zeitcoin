@@ -92,9 +92,7 @@
        </property>
        <property name="text">
         <string>
-Copyright © 2009-2012 Bitcoin Developers
-Copyright © 2012 PPCoin Developers
-Copyright © 2014 Zeitcoin Developers
+Copyright © 2014-2017 Zeitcoin Developers
 </string>
        </property>
        <property name="textInteractionFlags">
