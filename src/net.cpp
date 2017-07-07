@@ -10,6 +10,7 @@
 #include "strlcpy.h"
 #include "addrman.h"
 #include "ui_interface.h"
+#include "script.h"				   
 
 #ifdef WIN32
 #include <string.h>
@@ -22,6 +23,8 @@
 #include <miniupnpc/upnperrors.h>
 #endif
 
+// Dump addresses to peers.dat every 15 minutes (900s)
+#define DUMP_ADDRESSES_INTERVAL 900								   
 using namespace std;
 using namespace boost;
 

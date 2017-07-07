@@ -44,6 +44,10 @@ static CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 20);
 
 unsigned int nStakeMinAge = 60 * 60 * 24 * 20;    // minimum age for coin age: 20d
 unsigned int nStakeMaxAge = 60 * 60 * 24 * 40;    // stake age of full weight: 40d
+unsigned int nStakeMinAgeV2 = 60 * 60 * 24 * 1;    // minimum age for coin age: 1d
+unsigned int nStakeMaxAgeV2 = 60 * 60 * 24 * 20;    // stake age of full weight: 20d
+unsigned int nModifierInterval = 6 * 60 * 60;		// old interval of 6 hours between stake modifiers
+unsigned int nModifierIntervalV2 = 10 * 60;			// new interval of 10 mins between stake modifiers
 unsigned int nStakeTargetSpacing = 30;            // 30 sec block spacing
 
 int64 nChainStartTime = 1393346841;
@@ -978,12 +982,15 @@ int64 GetProofOfStakeReward(int64 nCoinAge, unsigned int nBits, unsigned int nTi
 
     nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE;
 
+	
     if(nHeight < YEARLY_BLOCKCOUNT)
         nRewardCoinYear = 5 * MAX_MINT_PROOF_OF_STAKE;
     else if(nHeight < (2 * YEARLY_BLOCKCOUNT))
         nRewardCoinYear = 4 * MAX_MINT_PROOF_OF_STAKE;
     else if(nHeight < (3 * YEARLY_BLOCKCOUNT))
         nRewardCoinYear = 3 * MAX_MINT_PROOF_OF_STAKE;
+	else if(nTime > FORK_2017_TIME_SWITCH2)
+		nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE2; // 0.0005% annual interest
 
     int64 nSubsidy = nCoinAge * nRewardCoinYear / 365;
 
@@ -991,6 +998,23 @@ int64 GetProofOfStakeReward(int64 nCoinAge, unsigned int nBits, unsigned int nTi
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRI64d" nBits=%d\n", FormatMoney(nSubsidy).c_str(), nCoinAge, nBits);
     return nSubsidy;
 }
+
+unsigned int GetStakeMinAge(unsigned int nTime)
+{
+  if (nTime > FORK_2017_TIME_SWITCH2)
+      return nStakeMinAgeV2;
+  else
+      return nStakeMinAge;
+}
+
+unsigned int GetStakeMaxAge(unsigned int nTime)
+{
+  if (nTime > FORK_2017_TIME_SWITCH2)
+      return nStakeMaxAgeV2;
+  else
+      return nStakeMaxAge;
+}
+
 
 static const int64 nTargetTimespan = 30 * 30;  
 static const int64 nTargetSpacingWorkMax = 3 * nStakeTargetSpacing; 
@@ -1905,7 +1929,7 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, uint64& nCoinAge) const
         CBlock block;
         if (!block.ReadFromDisk(txindex.pos.nFile, txindex.pos.nBlockPos, false))
             return false; // unable to read block of previous transaction
-        if (block.GetBlockTime() + nStakeMinAge > nTime)
+		if (block.GetBlockTime() + GetStakeMinAge(nTime) > nTime)
             continue; // only count coins meeting min age requirement
 
         int64 nValueIn = txPrev.vout[txin.prevout.n].nValue;
@@ -1982,7 +2006,7 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos)
     // ppcoin: compute stake modifier
     uint64 nStakeModifier = 0;
     bool fGeneratedStakeModifier = false;
-    if (!ComputeNextStakeModifier(pindexNew->pprev, nStakeModifier, fGeneratedStakeModifier))
+    if (!ComputeNextStakeModifier(pindexNew->pprev, nStakeModifier, fGeneratedStakeModifier, nTime))
         return error("AddToBlockIndex() : ComputeNextStakeModifier() failed");
     pindexNew->SetStakeModifier(nStakeModifier, fGeneratedStakeModifier);
     pindexNew->nStakeModifierChecksum = GetStakeModifierChecksum(pindexNew);
@@ -2542,6 +2566,7 @@ bool LoadBlockIndex(bool fAllowNew)
         nStakeMinAge = 2 * 60; // test net min age is 2 min
         nStakeMaxAge = 6 * 60; // test net max age is 6 min
         nModifierInterval = 60; // test modifier interval is 1 minutes
+		nModifierIntervalV2 = 20; // test2
         nCoinbaseMaturity = 6; // test maturity is 10 blocks
         nStakeTargetSpacing = 30; // test block spacing is 3 minutes
     }
@@ -3245,7 +3270,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                 printf("  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString().substr(0,20).c_str());
                 // ppcoin: tell downloading node about the latest block if it's
                 // without risk being rejected due to stake connection check
-                if (hashStop != hashBestChain && pindex->GetBlockTime() + nStakeMinAge > pindexBest->GetBlockTime())
+                if (hashStop != hashBestChain && pindex->GetBlockTime() + GetStakeMinAge(pindex->GetBlockTime()) > pindexBest->GetBlockTime())
                     pfrom->PushInventory(CInv(MSG_BLOCK, hashBestChain));
                 break;
             }

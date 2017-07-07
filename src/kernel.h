@@ -6,16 +6,16 @@
 
 #include "main.h"
 
-// MODIFIER_INTERVAL: time to elapse before new modifier is computed
-static const unsigned int MODIFIER_INTERVAL = 6 * 60 * 60;
+
 extern unsigned int nModifierInterval;
+extern unsigned int nModifierIntervalV2;
 
 // MODIFIER_INTERVAL_RATIO:
 // ratio of group interval length between the last group and the first group
 static const int MODIFIER_INTERVAL_RATIO = 3;
 
 // Compute the hash modifier for proof-of-stake
-bool ComputeNextStakeModifier(const CBlockIndex* pindexPrev, uint64& nStakeModifier, bool& fGeneratedStakeModifier);
+bool ComputeNextStakeModifier(const CBlockIndex* pindexPrev, uint64& nStakeModifier, bool& fGeneratedStakeModifier, unsigned int nTime);
 
 // Check whether stake kernel meets hash target
 // Sets hashProofOfStake on success return
