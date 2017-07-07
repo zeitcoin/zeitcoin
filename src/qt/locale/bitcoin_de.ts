@@ -2656,7 +2656,7 @@ Address: %4
     <message>
         <location line="+8"/>
         <source>Loading block index...</source>
-        <translation>Loading block index...</translation>
+        <translation>Lade Blockindex...</translation>
     </message>
     <message>
         <location line="-46"/>
