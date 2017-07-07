@@ -2576,7 +2576,7 @@ Address: %4
     <message>
         <location line="+44"/>
         <source>Loading addresses...</source>
-        <translation>Loading addresses...</translation>
+        <translation>Lade Adressen...</translation>
     </message>
     <message>
         <location line="-26"/>
@@ -2681,7 +2681,7 @@ Address: %4
     <message>
         <location line="+19"/>
         <source>Loading wallet...</source>
-        <translation>Loading wallet...</translation>
+        <translation>Lade Wallet...</translation>
     </message>
     <message>
         <location line="-39"/>
