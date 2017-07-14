@@ -41,7 +41,7 @@ static const int64 MAX_MINT_PROOF_OF_STAKE2 = 0.000005 * COIN; // 0.0005% annual
 // Hard Fork constants
 static const int CUTOFF_POW_BLOCK = 270000;
 static const int FORK_2017_TIME = 1438419600; // Hardfork 2015-08-01 10:00:00 UTC
-static const int FORK_2017_TIME_SWITCH2 = 1500120000; // Human time (GMT): Saturday, 15. July 2017 12:00:00
+static const int FORK_2017_TIME_SWITCH2 = 1502452800; // HardFork 2017-08-11 12:00:00 GMT
 
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
 
