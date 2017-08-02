@@ -1157,6 +1157,7 @@ void MapPort()
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
     {"bitcoin.gaw.pm", "seed.zeit-coin.net"},
+    {"zeitseed2.ddns.net", "seed.aeternity.cc"},
     {NULL, NULL}
 };
 
